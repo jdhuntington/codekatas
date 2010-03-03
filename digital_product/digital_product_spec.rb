@@ -39,6 +39,20 @@ describe DigitalProduct do
   end
 
   describe '#initialize' do
-    it 'should raise an exception if 0 is passed'
+    it 'should raise an exception if 0 is passed' do
+      lambda {DigitalProduct.new(0)}.should raise_error(DigitalProductCantComputeZeroError)
+    end
+  end
+
+  describe '#as_pretty_output' do
+    it 'should return a list of neatly formatted numbers for 1984 as input' do
+      d = DigitalProduct.new 1984
+      d.as_pretty_output.should == "1984 => 288 => 128 => 16 => 6"
+    end
+    
+    it 'should return a list of neatly formatted numbers for 455370 as input' do
+      d = DigitalProduct.new 455370
+      d.as_pretty_output.should == "455370 => 2100 => 2"
+    end
   end
 end

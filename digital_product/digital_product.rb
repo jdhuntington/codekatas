@@ -8,15 +8,33 @@
 # For example:
 # `ruby digital_product.rb < sample_data.txt`
 
-
+class DigitalProductCantComputeZeroError < StandardError
+end
 class DigitalProduct
   def initialize(n)
-    
+    raise DigitalProductCantComputeZeroError if n == 0
+    @n = n
+    @product = product(DigitalProduct.number_to_digits(@n))
+
+    if @product > 9
+      @next = DigitalProduct.new(@product)
+    else
+      @next = nil
+    end
   end
 
   def product(digits)
     non_zero_digits = digits.reject{ |x| x == 0 }
     non_zero_digits.inject(1) { |x,y| x * y }
+  end
+
+  def as_pretty_output
+    if @next
+      additional_output = @next.as_pretty_output
+    else
+      additional_output = @product.to_s
+    end
+    @n.to_s + " => " + additional_output
   end
 
   def self.number_to_digits(n, current_digits=[])
@@ -32,7 +50,12 @@ class DigitalProduct
 end
 
 if __FILE__ == $0
-  ARGF.each_line do |number_as_string|
-    puts DigitalProduct.new(number_as_string.to_i).as_pretty_output
+  ARGF.each do |number_as_string|
+    begin
+      puts DigitalProduct.new(number_as_string.to_i).as_pretty_output
+    rescue DigitalProductCantComputeZeroError => e
+      puts "Bye!"
+    end
   end
 end
+
