@@ -14,6 +14,11 @@ class DigitalProduct
     
   end
 
+  def product(digits)
+    non_zero_digits = digits.reject{ |x| x == 0 }
+    non_zero_digits.inject(1) { |x,y| x * y }
+  end
+
   def self.number_to_digits(n, current_digits=[])
     # 0 is a special case - return [0]
     if n == 0 && current_digits == []
@@ -21,7 +26,7 @@ class DigitalProduct
     elsif n > 0
       number_to_digits((n / 10), [n % 10] + current_digits)
     else
-      current_digits
+      current_digits            # Tail recursion would be nice here...
     end
   end
 end
